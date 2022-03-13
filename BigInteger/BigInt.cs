@@ -6,6 +6,6 @@ namespace BigInteger
 {
 	public struct BigInt
 	{
-
+		
 	}
 }
