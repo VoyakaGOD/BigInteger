@@ -29,71 +29,60 @@ namespace Test
 		static void Main(string[] args)
 		{
 			Random rand = new Random();
+			BigInt[] bigInts = new BigInt[30];
 
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; i < bigInts.Length; i++)
 			{
 				var arr = CreateByteArray(1, 5, rand);
-				Console.WriteLine(Convert(arr) + " -> " + BigNumberUtils.ToHex(arr));
+				bigInts[i] = BigInt.FromHex(BigNumberUtils.ToHex(arr));
+				Console.WriteLine(Convert(arr) + " -> " + bigInts[i].ToHex());
 			}
 
 			Console.WriteLine("----------------------------------------------------------------------");
 
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; (i + 1) < bigInts.Length; i += 2)
 			{
-				string str = BigNumberUtils.ToHex(CreateByteArray(1, 5, rand));
-				Console.WriteLine(str + " -> " + Convert(BigNumberUtils.FromHex(str)));
+				var a = bigInts[i];
+				var b = bigInts[i + 1];
+				var c = a + b;
+				Console.WriteLine(a.ToHex() + " + " + b.ToHex() + " = " + c.ToHex());
 			}
 
 			Console.WriteLine("----------------------------------------------------------------------");
 
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; (i + 1) < bigInts.Length; i += 2)
 			{
-				var a = CreateByteArray(1, 5, rand);
-				var b = CreateByteArray(1, 5, rand);
-				byte c = 0;
-				Console.WriteLine(BigNumberUtils.ToHex(a) + " + " + BigNumberUtils.ToHex(b) + " = " + BigNumberUtils.ToHex(BigNumberUtils.Add(a, b, ref c)));
+				var a = bigInts[i];
+				var b = bigInts[i + 1];
+				var c = a - b;
+				Console.WriteLine(a.ToHex() + " - " + b.ToHex() + " = " + c.ToHex());
 			}
 
 			Console.WriteLine("----------------------------------------------------------------------");
 
-			for (int i = 0; i < 15; i++)
+			for (int i = 0; (i + 1) < bigInts.Length; i += 2)
 			{
-				var a = CreateByteArray(1, 5, rand);
-				var b = CreateByteArray(1, 5, rand);
-				Console.WriteLine(BigNumberUtils.ToHex(a) + "*" + BigNumberUtils.ToHex(b) + "=" + BigNumberUtils.ToHex(BigNumberUtils.Mul(a, b)));
+				var a = bigInts[i];
+				var b = bigInts[i + 1];
+				var c = a * b;
+				Console.WriteLine(a.ToHex() + " * " + b.ToHex() + " = " + c.ToHex());
 			}
 
-			/*for (int i = 0; i < 15; i++)
-			{
-				byte a = (byte)rand.Next(256);
-				byte b = (byte)rand.Next(256);
-				byte c = 0;
-				Console.WriteLine(a + "+" + b + "=(" + BigNumberUtils.Add(a, b, ref c) + "," + c + ")");
-			}
 			Console.WriteLine("----------------------------------------------------------------------");
-			for (int i = 0; i < 15; i++)
+
+			for (int i = 0; i < bigInts.Length; i++)
 			{
-				byte a = (byte)rand.Next(256);
-				byte b = (byte)rand.Next(256);
-				byte c = 0;
-				Console.WriteLine(a + "*" + b + "=(" + BigNumberUtils.Mul(a, b, ref c) + "," + c + ")");
+				var a = bigInts[i];
+				var c = a * 2;
+				Console.WriteLine(a.ToHex() + " * 2 = " + c.ToHex());
 			}
+
 			Console.WriteLine("----------------------------------------------------------------------");
-			for (int i = 0; i < 15; i++)
-			{
-				int a = rand.Next();
-				byte b = (byte)rand.Next(256);
-				byte c = 0;
-				Console.WriteLine(a + "*" + b + "=(" + BitConverter.ToUInt32(BigNumberUtils.Mul(BitConverter.GetBytes(a), b, ref c), 0) + "," + c + ")");
-			}
-			Console.WriteLine("----------------------------------------------------------------------");
-			for (int i = 0; i < 15; i++)
-			{
-				int a = rand.Next();
-				int b = rand.Next();
-				Console.WriteLine(a + "*" + b + "=" + BitConverter.ToUInt64(BigNumberUtils.Mul(BitConverter.GetBytes(a), BitConverter.GetBytes(b)), 0));
-			}
-			Console.WriteLine(BigNumberUtils.ToHex(BigNumberUtils.Mul(new byte[] { 1, 0 }, new byte[] { 1, 0 })));*/
+
+			Array.Sort(bigInts);
+			for (int i = 0; i < bigInts.Length; i++)
+				Console.WriteLine(bigInts[i].ToHex());
+
 			Console.ReadLine();
 		}
 	}
