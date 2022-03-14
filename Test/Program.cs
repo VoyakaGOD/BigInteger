@@ -73,8 +73,8 @@ namespace Test
 			for (int i = 0; i < bigInts.Length; i++)
 			{
 				var a = bigInts[i];
-				var c = a * 2;
-				Console.WriteLine(a.ToHex() + " * 2 = " + c.ToHex());
+				var c = a * 10;
+				Console.WriteLine(a.ToHex() + " * 10 = " + c.ToHex());
 			}
 
 			Console.WriteLine("----------------------------------------------------------------------");
@@ -82,6 +82,15 @@ namespace Test
 			Array.Sort(bigInts);
 			for (int i = 0; i < bigInts.Length; i++)
 				Console.WriteLine(bigInts[i].ToHex());
+
+			Console.WriteLine("----------------------------------------------------------------------");
+
+			while (true)
+			{
+				Console.Write("dec:");
+				string dec = Console.ReadLine();
+				Console.WriteLine(BigInt.Parse(dec).ToHex());
+			}
 
 			Console.ReadLine();
 		}

@@ -18,11 +18,13 @@ namespace BigInteger
 				num[i+shift] = Add(num[i + shift], added[i], ref carry);
 		}
 
-		public static byte[] Add(byte[] left, byte[] right, byte carry = 0)
+		public static byte[] Add(byte[] left, byte[] right, int mlen = -1, byte carry = 0)
 		{
-			int len = Math.Max(left.Length, right.Length);
+			int len = (mlen != -1) ? mlen : Math.Max(left.Length, right.Length);
 			byte[] result = new byte[len + 1];
 			int lim = Math.Min(left.Length, right.Length);
+			if (lim > len)
+				lim = len;
 			int ptr = 0;
 			for (; ptr < lim; ptr++)
 				result[ptr] = Add(left[ptr], right[ptr], ref carry);

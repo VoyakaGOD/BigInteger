@@ -5,6 +5,9 @@ namespace BigInteger
 {
 	public sealed class BigInt : IComparable, IComparable<BigInt>, IEquatable<BigInt>
 	{
+		public static readonly BigInt Zero = new BigInt(false, new byte[] { 0 });
+		public static readonly BigInt One = new BigInt(false, new byte[] { 1 });
+
 		private bool _sign;
 		private int _size;
 		private byte[] _bytes;
@@ -90,21 +93,34 @@ namespace BigInteger
 		public static BigInt FromHex(string hex)
 		{
 			if(hex.Length  == 0)
-				return new BigInt(false, new byte[0]);
+				return Zero;
 
 			bool sign = (hex[0] == '-');
 			return new BigInt(sign, BigNumberUtils.FromHex(hex.Substring(sign ? 1 : 0)));
 		}
 
-		public static bool TryParse(string str, out BigInt result)
+		public static bool TryParse(string dec, out BigInt result)
 		{
-			throw new NotImplementedException();
+			result = Zero;
+			if (dec.Length == 0)
+				return true;
+			bool sign = dec[0] == '-';
+			for (int i = (sign ? 1 : 0); i < dec.Length; i++)
+			{
+				char c = dec[i];
+				if (c < '0' || c > '9')
+					return false;
+				result = result * 10 + (byte)(c - '0') * One;
+			}
+			if (sign)
+				result = -result;
+			return true;
 		}
 
-		public static BigInt Parse(string str)
+		public static BigInt Parse(string dec)
 		{
 			BigInt result;
-			if (TryParse(str, out result))
+			if (TryParse(dec, out result))
 				return result;
 			throw new ArgumentException("The string has incorrect format.");
 		}
@@ -128,11 +144,11 @@ namespace BigInteger
 		{
 			if(left._sign == right._sign)
 			{
-				return new BigInt(left._sign, BigNumberUtils.Add(left._bytes, right._bytes));
+				return new BigInt(left._sign, BigNumberUtils.Add(left._bytes, right._bytes, Math.Max(left._size, right._size)));
 			}
 			else
 			{
-				byte[] bytes = BigNumberUtils.Add(left._bytes, BigNumberUtils.GetComplement(right._bytes, left._size), 1);
+				byte[] bytes = BigNumberUtils.Add(left._bytes, BigNumberUtils.GetComplement(right._bytes, left._size), Math.Max(left._size, right._size), 1);
 				bool flag = bytes[bytes.Length - 1] > 0;
 				if (flag)
 				{
