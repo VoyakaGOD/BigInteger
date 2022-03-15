@@ -85,14 +85,34 @@ namespace Test
 
 			Console.WriteLine("----------------------------------------------------------------------");
 
-			while (true)
+			for (int i = 0; i < 15; i++)
 			{
-				Console.Write("dec:");
-				string dec = Console.ReadLine();
-				Console.WriteLine(BigInt.Parse(dec).ToHex());
+				int val = rand.Next();
+				Console.WriteLine(val + " - " + (val % 10) + " - " + BigNumberUtils.Mod10(BitConverter.GetBytes(val)));
 			}
 
-			Console.ReadLine();
+			Console.WriteLine("----------------------------------------------------------------------");
+
+			for (int i = 0; i < 15; i++)
+			{
+				int val = rand.Next();
+				int r;
+				Console.Write(BigInt.FromBytes(false, BitConverter.GetBytes(val / 10)).ToHex() + " - ");
+				Console.WriteLine(BigInt.FromBytes(false, BitConverter.GetBytes(val)).UnsignedDiv10(out r).ToHex());
+			}
+
+			Console.WriteLine("----------------------------------------------------------------------");
+
+			while (true)
+			{
+				Console.Write("dec1:");
+				var num1 = BigInt.Parse(Console.ReadLine());
+				Console.Write("dec2:");
+				var num2 = BigInt.Parse(Console.ReadLine());
+				Console.WriteLine("+)" + (num1 + num2));
+				Console.WriteLine("-)" + (num1 - num2));
+				Console.WriteLine("*)" + (num1 * num2));
+			}
 		}
 	}
 }

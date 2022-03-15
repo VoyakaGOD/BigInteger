@@ -143,5 +143,15 @@ namespace BigInteger
 			}
 			return num;
 		}
+
+		public static int Mod10(byte[] num)
+		{
+			if (num.Length == 0)
+				return 0;
+			int result = num[0] % 10;
+			for (int i = 1; i < num.Length; i++)
+				result = (((6 * num[i]) % 10) + result) % 10;
+			return result;
+		}
 	}
 }

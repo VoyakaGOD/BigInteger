@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace BigInteger
 {
@@ -30,9 +31,45 @@ namespace BigInteger
 			return (_sign ? "-" : "") + BigNumberUtils.ToHex(_bytes, _size);
 		}
 
+		public BigInt ShiftByOneByte()
+		{
+			byte[] result = new byte[_size + 1];
+			Array.Copy(_bytes, 0, result, 1, _size);
+			return new BigInt(_sign, result);
+		}
+
+		public int Mod10()
+		{
+			return BigNumberUtils.Mod10(_bytes);
+		}
+
+		public BigInt UnsignedDiv10(out int remainder)
+		{
+			BigInt result = Zero;
+			remainder = 0;
+			for (int i = _size - 1; i >= 0; i--)
+			{
+				int v = 256 * remainder + _bytes[i];
+				int v10 = v / 10;
+				remainder = v - 10*v10;
+				result = result.ShiftByOneByte() + new BigInt(false, new byte[] { (byte)v10 });
+			}
+			return result;
+		}
+
 		public override string ToString()
 		{
-			throw new NotImplementedException();
+			var result = new StringBuilder();
+			BigInt num = this;
+			int remainder;
+			while(num.Size > 0)
+			{
+				num = num.UnsignedDiv10(out remainder);
+				result.Insert(0, remainder);
+			}
+			if (_sign)
+				result.Insert(0, '-');
+			return result.ToString();
 		}
 
 		public int CompareTo(BigInt other)
@@ -97,6 +134,14 @@ namespace BigInteger
 
 			bool sign = (hex[0] == '-');
 			return new BigInt(sign, BigNumberUtils.FromHex(hex.Substring(sign ? 1 : 0)));
+		}
+
+		public static BigInt FromBytes(bool sign, byte[] bytes)
+		{
+			if (bytes.Length == 0)
+				return Zero;
+
+			return new BigInt(sign, (byte[])bytes.Clone());
 		}
 
 		public static bool TryParse(string dec, out BigInt result)
